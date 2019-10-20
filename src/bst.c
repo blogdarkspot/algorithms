@@ -1,6 +1,7 @@
 #include"binary_search_tree.h"
 #include<stdlib.h>
 #include<stdio.h>
+#include<string.h>
 
 void __search_minimum_node(struct Node *tree, int *key, void *data)
 {
@@ -81,7 +82,7 @@ int __create_new_node(struct Node** node, struct Node* parent, int key, void* da
         (*node)->key = malloc(sizeof(int));
 
         if ((*node)->key != NULL) {
-
+            memset((*node), 0, sizeof(struct Node));
             *((*node)->key) = key;
             (*node)->data = data;
             (*node)->parent = parent;
@@ -182,6 +183,26 @@ void create_tree(struct Node** root)
     (*root)->data = NULL;
 }
 
+void __free_node(struct Node *node)
+{
+    if(node != NULL)
+    {
+        free(node->key);
+        free(node);
+        memset(node, 0, sizeof(struct Node));
+    }
+}
+
+void free_tree(struct Node *root)
+{
+    if(root != NULL)
+    {
+        free_tree(root->left);
+        free_tree(root->right);
+        __free_node(root);
+    }
+}
+
 void insert_node(struct Node *tree, int key, void *data)
 {
     if(tree != NULL)
@@ -200,7 +221,7 @@ void insert_node(struct Node *tree, int key, void *data)
             while(tmp != NULL)
             {
                 parent = tmp;
-                if(*(tmp->key) < key)
+                if(*(tmp->key) > key)
                 {
                     tmp = tmp->left;
                 }
@@ -209,7 +230,7 @@ void insert_node(struct Node *tree, int key, void *data)
                     tmp = tmp->right;
                 }
             }
-            if(*(parent)->key < key)
+            if(*(parent)->key > key)
             {
                 struct Node *n;
                 __create_new_node(&n, parent, key, data);
@@ -230,72 +251,33 @@ int delete_node(struct Node* tree, int key)
     struct Node* node = __search_node(tree, key);
     if (node != NULL) {
         if (node->left == NULL && node->right == NULL) {
-            //just remove the node
             struct Node* parent = node->parent;
-            if (parent == NULL) {
-                //root node just clear
-                node->data = NULL;
-                free(node->key);
-                node->key = NULL;
-            } else {
+            if (parent != NULL) {
                 if (parent->right == node) {
-                    free(node->key);
-                    node->key = NULL;
-                    node->data = NULL;
-                    node->parent = NULL;
-                    free(node);
-                    node = NULL;
                     parent->right = NULL;
-
                 } else {
-                    free(node->key);
-                    node->key = NULL;
-                    node->data = NULL;
-                    node->parent = NULL;
-                    free(node);
-                    node = NULL;
                     parent->left = NULL;
                 }
             }
         } else if (node->left != NULL && node->right == NULL) {
             node->left->parent = node->parent;
             node->left = NULL;
-            free(node->key);
-            node->key = NULL;
-            node->data = NULL;
-            free(node);
         } else if (node->right != NULL && node->left == NULL) {
             node->right->parent = node->parent;
             node->right = NULL;
-            free(node->key);
-            node->key = NULL;
-            node->data = NULL;
-            free(node);
         } else {
             struct Node* sucessor = __search_sucessor_node(node);
             if (sucessor == node->right) {
-                struct Node* parent = node->parent;
-                parent->right = sucessor;
-                node->data = NULL;
-                node->left = NULL;
-                node->right = NULL;
-                free(node->key);
-                free(node);
-                node->key = NULL;
-                node = NULL;
-            } else {
-                sucessor->parent = node->parent;
+                node->parent->right = sucessor;
                 sucessor->left = node->left;
-                node->right->left = sucessor->right;
-                node->data = NULL;
-                node->left = NULL;
-                node->right = NULL;
-                free(node->key);
-                free(node);
-                node->key = NULL;
-                node = NULL;
+            } else {
+                sucessor->parent->left = sucessor->right;
+                sucessor->parent = node->parent;
+                sucessor->right = node->right;
+                sucessor->left = node->left;
             }
         }
+        __free_node(node);
     }
     return 0;
 }

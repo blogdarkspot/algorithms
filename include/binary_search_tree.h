@@ -20,6 +20,8 @@ struct Node
     void *data;
 };
 
+typedef struct Node binary_tree;
+
 void search_value_by_key(struct Node *tree, int key, void *data);
 
 void search_minimum_key_and_value(struct Node *tree, 
