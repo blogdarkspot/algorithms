@@ -3,6 +3,8 @@
 #include<stdio.h>
 #include<string.h>
 
+static int size_tree = 0;
+
 void __search_minimum_node(struct Node *tree, int *key, void *data)
 {
     struct Node *tmp = tree;
@@ -243,6 +245,7 @@ void insert_node(struct Node *tree, int key, void *data)
                 parent->right = n;
             }
         }
+        size_tree ++;
     }
 }
 
@@ -278,6 +281,7 @@ int delete_node(struct Node* tree, int key)
             }
         }
         __free_node(node);
+        size_tree --;
     }
     return 0;
 }
@@ -290,6 +294,23 @@ void inorder_tree_walk(struct Node *tree)
         printf("%d ", *(tree->key));
         inorder_tree_walk(tree->right);
     }
+}
+
+void __get_inorder_tree(struct Node *root, int *key)
+{
+    if(root != NULL)
+    {
+        __get_inorder_tree(root->left, ++key);
+        *key = *(root->key);
+        __get_inorder_tree(root->right, ++key);
+    }
+}
+
+void get_inorder_tree(struct Node *root, int **keys, int *size)
+{
+        *keys = malloc(sizeof(int) * size_tree);
+        *size = size_tree;
+        __get_inorder_tree(root, *keys);
 }
 
 void preorder_tree_walk(struct Node *tree)

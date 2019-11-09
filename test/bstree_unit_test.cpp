@@ -1,23 +1,13 @@
 #include "binary_search_tree.h"
-#include<assert.h>
-#include<stdio.h>
+#include <gtest/gtest.h>
+#include <cstdlib>
+#include <cstdio>
 
 void test_create_new_tree()
 {
     binary_tree *tree = NULL;
     create_tree(&tree);
-    assert(tree != NULL);
 
-}
-
-void test_add_one_node()
-{
-    binary_tree *tree = NULL;
-    int *data = malloc(sizeof(int));
-    *data = 10;
-    create_tree(&tree);
-    insert_node(tree, 1, NULL);
-    printf("\n");
 }
 
 void test_add_tree_nodes()
@@ -28,7 +18,6 @@ void test_add_tree_nodes()
     insert_node(tree, 1, NULL);
     insert_node(tree, 4, NULL);
     insert_node(tree, 8, NULL);
-    printf("\n");
 }
 
 void test_add_tree_nodes_delete_leaf()

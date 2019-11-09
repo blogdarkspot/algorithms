@@ -20,4 +20,4 @@ macro(package_add_test TESTNAME)
     set_target_properties(${TESTNAME} PROPERTIES FOLDER tests)
 endmacro()
 
-package_add_test(BinaryTreeTest bstree_unit_test.c)
+package_add_test(BinaryTreeTest bstree_unit_test.cpp)

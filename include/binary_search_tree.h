@@ -1,6 +1,10 @@
 #ifndef __BINARY_SEARCH_TREE_H_
 #define __BINARY_SEARCH_TREE_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif 
+
 #define ERR_NO_ERROR 0x00
 #define ERR_CREATE_NODE 0x01
 #define ERR_CREATE_KEY 0x02
@@ -44,8 +48,12 @@ int delete_node(struct Node* tree, int key);
 
 void inorder_tree_walk(struct Node *tree);
 
+void get_inorder_tree(struct Node *tree, int **keys, int *size);
+
 void preorder_tree_walk(struct Node *tree);
 
 void postorder_tree_walk(struct Node *tree);
-
+#ifdef __cplusplus
+}
+#endif
 #endif
